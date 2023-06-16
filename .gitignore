@@ -1,0 +1,9 @@
+node_modules
+\.idea/
+\.vs/
+*.pb
+*.sh
+*.env
+
+test.js
+decoder.js
