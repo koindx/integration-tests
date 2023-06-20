@@ -1,0 +1,89 @@
+{
+    "methods": {
+        "authorize_update": {
+            "argument": "periphery.authorize_update_arguments",
+            "return": "periphery.boole",
+            "description": "Authorize of protocol",
+            "entry-point": "0x901f93db",
+            "read-only": false
+        },
+        "get_config": {
+            "argument": "periphery.get_config_arguments",
+            "return": "periphery.configs_object",
+            "description": "Get configs of protocol",
+            "entry-point": "0xbc4fcdd4",
+            "read-only": true
+        },
+        "set_config": {
+            "argument": "periphery.set_config_arguments",
+            "return": "periphery.empty_object",
+            "description": "Set configs of protocol",
+            "entry-point": "0x4ba58c89",
+            "read-only": false
+        },
+        "get_pair": {
+            "argument": "periphery.get_pair_arguments",
+            "return": "periphery.address",
+            "description": "get address of a pair",
+            "entry-point": "0xefdc45c1",
+            "read-only": true
+        },
+        "create_pair": {
+            "argument": "periphery.create_pair_arguments",
+            "return": "periphery.empty_object",
+            "description": "Create pair if it doesn't exist",
+            "entry-point": "0x286b1165",
+            "read-only": false
+        },
+        "add_liquidity": {
+            "argument": "periphery.add_liquidity_arguments",
+            "return": "periphery.add_liquidity_result",
+            "description": "Add liquidity to pair",
+            "entry-point": "0x070659cd",
+            "read-only": false
+        },
+        "remove_liquidity": {
+            "argument": "periphery.remove_liquidity_arguments",
+            "return": "periphery.remove_liquidity_result",
+            "description": "Remove liquidity from pair",
+            "entry-point": "0x26c78db1",
+            "read-only": false
+        },
+        "swap_tokens_in": {
+            "argument": "periphery.swap_tokens_in_arguments",
+            "return": "periphery.empty_object",
+            "description": "Swap tokens with exact input",
+            "entry-point": "0x8b35a506",
+            "read-only": false
+        },
+        "swap_tokens_out": {
+            "argument": "periphery.swap_tokens_out_arguments",
+            "return": "periphery.empty_object",
+            "description": "Swap tokens with exact output",
+            "entry-point": "0xe02d8fbd",
+            "read-only": false
+        },
+        "get_quote": {
+            "argument": "periphery.get_quote_arguments",
+            "return": "periphery.uint64",
+            "description": "Get quote depending on reservations",
+            "entry-point": "0x3f98e58d",
+            "read-only": true
+        },
+        "get_amount_out": {
+            "argument": "periphery.get_amount_out_arguments",
+            "return": "periphery.uint64",
+            "description": "Get amounts out",
+            "entry-point": "0x2184ef25",
+            "read-only": true
+        },
+        "get_amount_in": {
+            "argument": "periphery.get_amount_in_arguments",
+            "return": "periphery.uint64",
+            "description": "Get amounts in",
+            "entry-point": "0x45378fcb",
+            "read-only": true
+        }
+    },
+    "types": "CpEQCh5hc3NlbWJseS9wcm90by9wZXJpcGhlcnkucHJvdG8SCXBlcmlwaGVyeRoUa29pbm9zL29wdGlvbnMucHJvdG8iGwoDc3RyEhQKBXZhbHVlGAEgASgJUgV2YWx1ZSIeCgZ1aW50MzISFAoFdmFsdWUYASABKA1SBXZhbHVlIiIKBnVpbnQ2NBIYCgV2YWx1ZRgBIAEoBEICMAFSBXZhbHVlIiUKB2FkZHJlc3MSGgoFdmFsdWUYASABKAxCBIC1GAZSBXZhbHVlIh0KBWJvb2xlEhQKBXZhbHVlGAEgASgIUgV2YWx1ZSIOCgxlbXB0eV9vYmplY3QiRAoOY29uZmlnc19vYmplY3QSFQoGZmVlX29uGAEgASgIUgVmZWVPbhIbCgZmZWVfdG8YAiABKAxCBIC1GAZSBWZlZVRvIjwKCHBhaXJfa2V5EhcKB3Rva2VuX2EYASABKAxSBnRva2VuQRIXCgd0b2tlbl9iGAIgASgMUgZ0b2tlbkIiMAoaYXV0aG9yaXplX3VwZGF0ZV9hcmd1bWVudHMSEgoEaGFzaBgBIAEoDFIEaGFzaCIWChRnZXRfY29uZmlnX2FyZ3VtZW50cyJHChRzZXRfY29uZmlnX2FyZ3VtZW50cxIvCgV2YWx1ZRgBIAEoCzIZLnBlcmlwaGVyeS5jb25maWdzX29iamVjdFIFdmFsdWUiUgoSZ2V0X3BhaXJfYXJndW1lbnRzEh0KB3Rva2VuX2EYASABKAxCBIC1GAZSBnRva2VuQRIdCgd0b2tlbl9iGAIgASgMQgSAtRgGUgZ0b2tlbkIiVQoVY3JlYXRlX3BhaXJfYXJndW1lbnRzEh0KB3Rva2VuX2EYASABKAxCBIC1GAZSBnRva2VuQRIdCgd0b2tlbl9iGAIgASgMQgSAtRgGUgZ0b2tlbkIi/wEKF2FkZF9saXF1aWRpdHlfYXJndW1lbnRzEh0KB3Rva2VuX2EYASABKAxCBIC1GAZSBnRva2VuQRIdCgd0b2tlbl9iGAIgASgMQgSAtRgGUgZ0b2tlbkISLAoQYW1vdW50X2FfZGVzaXJlZBgDIAEoBEICMAFSDmFtb3VudEFEZXNpcmVkEiwKEGFtb3VudF9iX2Rlc2lyZWQYBCABKARCAjABUg5hbW91bnRCRGVzaXJlZBIkCgxhbW91bnRfYV9taW4YBSABKARCAjABUgphbW91bnRBTWluEiQKDGFtb3VudF9iX21pbhgGIAEoBEICMAFSCmFtb3VudEJNaW4idgoUYWRkX2xpcXVpZGl0eV9yZXN1bHQSIAoJbGlxdWlkaXR5GAEgASgEQgIwAVIJbGlxdWlkaXR5Eh0KCGFtb3VudF9hGAIgASgEQgIwAVIHYW1vdW50QRIdCghhbW91bnRfYhgDIAEoBEICMAFSB2Ftb3VudEIiyAEKGnJlbW92ZV9saXF1aWRpdHlfYXJndW1lbnRzEh0KB3Rva2VuX2EYASABKAxCBIC1GAZSBnRva2VuQRIdCgd0b2tlbl9iGAIgASgMQgSAtRgGUgZ0b2tlbkISIAoJbGlxdWlkaXR5GAMgASgEQgIwAVIJbGlxdWlkaXR5EiQKDGFtb3VudF9hX21pbhgEIAEoBEICMAFSCmFtb3VudEFNaW4SJAoMYW1vdW50X2JfbWluGAUgASgEQgIwAVIKYW1vdW50Qk1pbiJXChdyZW1vdmVfbGlxdWlkaXR5X3Jlc3VsdBIdCghhbW91bnRfYRgBIAEoBEICMAFSB2Ftb3VudEESHQoIYW1vdW50X2IYAiABKARCAjABUgdhbW91bnRCIpsBChhzd2FwX3Rva2Vuc19pbl9hcmd1bWVudHMSHwoJYW1vdW50X2luGAEgASgEQgIwAVIIYW1vdW50SW4SKAoOYW1vdW50X291dF9taW4YAiABKARCAjABUgxhbW91bnRPdXRNaW4SEgoEcGF0aBgDIAMoCVIEcGF0aBIgCghyZWNlaXZlchgEIAEoDEIEgLUYBlIIcmVjZWl2ZXIinAEKGXN3YXBfdG9rZW5zX291dF9hcmd1bWVudHMSIQoKYW1vdW50X291dBgBIAEoBEICMAFSCWFtb3VudE91dBImCg1hbW91bnRfaW5fbWF4GAIgASgEQgIwAVILYW1vdW50SW5NYXgSEgoEcGF0aBgDIAMoCVIEcGF0aBIgCghyZWNlaXZlchgEIAEoDEIEgLUYBlIIcmVjZWl2ZXIicwoTZ2V0X3F1b3RlX2FyZ3VtZW50cxIaCgZhbW91bnQYASABKARCAjABUgZhbW91bnQSHwoJcmVzZXJ2ZV9hGAIgASgEQgIwAVIIcmVzZXJ2ZUESHwoJcmVzZXJ2ZV9iGAMgASgEQgIwAVIIcmVzZXJ2ZUIifQoYZ2V0X2Ftb3VudF9vdXRfYXJndW1lbnRzEh8KCWFtb3VudF9pbhgBIAEoBEICMAFSCGFtb3VudEluEh8KCXJlc2VydmVfYRgCIAEoBEICMAFSCHJlc2VydmVBEh8KCXJlc2VydmVfYhgDIAEoBEICMAFSCHJlc2VydmVCIn4KF2dldF9hbW91bnRfaW5fYXJndW1lbnRzEiEKCmFtb3VudF9vdXQYASABKARCAjABUglhbW91bnRPdXQSHwoJcmVzZXJ2ZV9hGAIgASgEQgIwAVIIcmVzZXJ2ZUESHwoJcmVzZXJ2ZV9iGAMgASgEQgIwAVIIcmVzZXJ2ZUJiBnByb3RvMw=="
+}

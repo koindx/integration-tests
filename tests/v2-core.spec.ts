@@ -2,21 +2,15 @@
 import os from "os";
 import path from "path";
 import { Contract, LocalKoinos, Serializer, Token } from "@roamin/local-koinos";
-import * as abi from "./../contracts/v2-core/core-abi.json";
-
-// @ts-ignore koilib_types is needed when using koilib
-abi.koilib_types = abi.types;
+import { core, periphery } from "./../contracts";
 
 jest.setTimeout(600000);
-
-const serializer = new Serializer(abi.types);
 
 // pre configs fopr windows paths
 let options = {}
 if(os.platform() == "win32") {
   options["dockerComposeFile"] = [path.resolve(__dirname, '../').replace(/\\/g, "/"), "node_modules", "@roamin", "local-koinos", "docker-compose.yml"].join("/")
   options["envFile"] = [path.resolve(__dirname, '../').replace(/\\/g, "/"), "node_modules", "@roamin", "local-koinos", ".env"].join("/")
-  console.log(options)
 }
 
 if (process.env.ENV === 'LOCAL') {
@@ -26,39 +20,72 @@ if (process.env.ENV === 'LOCAL') {
 
 let localKoinos = new LocalKoinos(options)
 
-const [ koin ] = localKoinos.getAccounts();
+const [ genesis, koin, coreWif, peripheryWif, dummyTokenA, dummyTokenB, account1 ] = localKoinos.getAccounts();
 
-beforeAll(async () => {
-  // start local-koinos node
-  try {
+let CoreContract: Contract;
+let PeripheryContract: Contract;
+
+
+describe('test the main methods', () => {
+  beforeAll(async () => {
     await localKoinos.startNode();
-  } catch (error) {
-    console.log(error)
-  }
-  await localKoinos.deployKoinContract({ mode: 'manual' });
-  await localKoinos.mintKoinDefaultAccounts({ mode: 'manual' });
-  await localKoinos.deployNameServiceContract({ mode: 'manual' });
-  await localKoinos.setNameServiceRecord('koin', koin.address, { mode: 'manual' });
-  await localKoinos.startBlockProduction();
-});
+    await localKoinos.deployKoinContract({ mode: 'manual' });
+    await localKoinos.mintKoinDefaultAccounts({ mode: 'manual' });
+    await localKoinos.deployNameServiceContract({ mode: 'manual' });
+    await localKoinos.setNameServiceRecord('koin', koin.address, { mode: 'manual' });
+    await localKoinos.deployTokenContract(dummyTokenA.wif);
+    await localKoinos.deployTokenContract(dummyTokenB.wif);
+    await localKoinos.startBlockProduction();
 
-afterAll(async () => {
-  // stop local-koinos node
-  await localKoinos.stopNode();
-});
+    // deploy periphery
+    PeripheryContract = await localKoinos.deployContract(
+      peripheryWif.wif,
+      periphery.wasm,
+      // @ts-ignore abi is compatible
+      periphery.abi,
+      { mode: 'manual' }
+    );
+    // deploy core
+    CoreContract = await localKoinos.deployContract(
+      coreWif.wif,
+      core.wasm,
+      // @ts-ignore abi is compatible
+      core.abi,
+      { mode: 'manual' },
+      {
+        authorizesCallContract: true,
+        authorizesTransactionApplication: true,
+        authorizesUploadContract: true,
+        nextOperations: [
+          (await PeripheryContract.functions.create_pair(
+            {tokenA: dummyTokenA.address, tokenB: dummyTokenB.address },
+            {
+              onlyOperation: true,
+              payer: account1.signer.getAddress()
+            }
+          )).operation
+        ],
+        beforeSend: async (tx) => {
+          console.log(tx)
+          await account1.signer.signTransaction(tx);
+        }
+      }
+    );
 
+    console.log("llego aqui")
+  });
+  
+  afterAll(async () => {
+    // // stop local-koinos node
+    // await localKoinos.stopNode();
+  });
 
-describe('mint', () => {
   it('mint liquidity', async () => {
   })
-})
 
-describe('burn', () => {
   it('burn liquidity', async () => {
   })
-})
 
-describe('swap', () => {
   it('swap tokens', async () => {
   })
 })
