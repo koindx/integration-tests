@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import os from "os";
 import path from "path";
-import { Contract, LocalKoinos, Serializer, Token } from "@roamin/local-koinos";
+import { Contract, LocalKoinos, Token } from "@roamin/local-koinos";
 import { core, periphery } from "../contracts";
 
 jest.setTimeout(600000);
@@ -20,10 +20,12 @@ if (process.env.ENV === 'LOCAL') {
 
 let localKoinos = new LocalKoinos(options)
 
-const [ genesis, koin, coreWif, peripheryWif, dummyTokenA, dummyTokenB ] = localKoinos.getAccounts();
+const [ genesis, koin, coreWif, peripheryWif, dummyTokenA, dummyTokenB, acc1Wif, acc2Wif ] = localKoinos.getAccounts();
 
 let CoreContract: Contract;
 let PeripheryContract: Contract;
+let dummyTKNA: Token;
+let dummyTKNB: Token;
 
 beforeAll(async () => {
   await localKoinos.startNode();
@@ -33,8 +35,9 @@ beforeAll(async () => {
   await localKoinos.setNameServiceRecord('koin', koin.address, { mode: 'manual' });
   await localKoinos.startBlockProduction();
 
-  await localKoinos.deployTokenContract(dummyTokenA.wif);
-  await localKoinos.deployTokenContract(dummyTokenB.wif);
+  dummyTKNA = await localKoinos.deployTokenContract(dummyTokenA.wif);
+  dummyTKNB = await localKoinos.deployTokenContract(dummyTokenB.wif);
+
   // deploy periphery
   PeripheryContract = await localKoinos.deployContract(
     peripheryWif.wif,
@@ -159,10 +162,15 @@ describe('test the main methods', () => {
         ]
       }
     );
+
+    // mint liquidity to users
+    await dummyTKNA.mint(acc1Wif.address, "10000000000000000");
+    await dummyTKNA.mint(acc2Wif.address, "10000000000000000");
+    await dummyTKNB.mint(acc1Wif.address, "10000000000000000");
+    await dummyTKNB.mint(acc2Wif.address, "10000000000000000");
   });
 
   it('mint liquidity', async () => {
-    
   })
 
   it('burn liquidity', async () => {
