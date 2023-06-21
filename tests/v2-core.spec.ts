@@ -33,9 +33,9 @@ describe('test the main methods', () => {
     await localKoinos.mintKoinDefaultAccounts({ mode: 'manual' });
     await localKoinos.deployNameServiceContract({ mode: 'manual' });
     await localKoinos.setNameServiceRecord('koin', koin.address, { mode: 'manual' });
+    await localKoinos.startBlockProduction();
     await localKoinos.deployTokenContract(dummyTokenA.wif);
     await localKoinos.deployTokenContract(dummyTokenB.wif);
-    await localKoinos.startBlockProduction();
 
     // deploy periphery
     PeripheryContract = await localKoinos.deployContract(
@@ -43,41 +43,30 @@ describe('test the main methods', () => {
       periphery.wasm,
       // @ts-ignore abi is compatible
       periphery.abi,
-      { mode: 'manual' }
+      {}
     );
+
     // deploy core
     CoreContract = await localKoinos.deployContract(
       coreWif.wif,
       core.wasm,
       // @ts-ignore abi is compatible
       core.abi,
-      { mode: 'manual' },
+      {},
       {
         authorizesCallContract: true,
         authorizesTransactionApplication: true,
         authorizesUploadContract: true,
         nextOperations: [
-          (await PeripheryContract.functions.create_pair(
-            {tokenA: dummyTokenA.address, tokenB: dummyTokenB.address },
-            {
-              onlyOperation: true,
-              payer: account1.signer.getAddress()
-            }
-          )).operation
-        ],
-        beforeSend: async (tx) => {
-          console.log(tx)
-          await account1.signer.signTransaction(tx);
-        }
+          (await PeripheryContract.functions.create_pair({ tokenA: dummyTokenA.address, tokenB: dummyTokenB.address }, { sendTransaction: false, onlyOperation: true })).operation
+        ]
       }
     );
-
-    console.log("llego aqui")
   });
   
   afterAll(async () => {
-    // // stop local-koinos node
-    // await localKoinos.stopNode();
+    // stop local-koinos node
+    await localKoinos.stopNode();
   });
 
   it('mint liquidity', async () => {
