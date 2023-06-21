@@ -1,88 +1,88 @@
 {
     "methods": {
         "authorize_update": {
-            "input": "periphery.authorize_update_arguments",
-            "output": "periphery.boole",
+            "argument": "periphery.authorize_update_arguments",
+            "return": "periphery.boole",
             "description": "Authorize of protocol",
-            "entryPoint": 2417988571,
-            "readOnly": false
+            "entry_point": 2417988571,
+            "read_only": false
         },
         "get_config": {
-            "input": "periphery.get_config_arguments",
-            "output": "periphery.configs_object",
+            "argument": "periphery.get_config_arguments",
+            "return": "periphery.configs_object",
             "description": "Get configs of protocol",
-            "entryPoint": 3159346644,
-            "readOnly": true
+            "entry_point": 3159346644,
+            "read_only": true
         },
         "set_config": {
-            "input": "periphery.set_config_arguments",
-            "output": "periphery.empty_object",
+            "argument": "periphery.set_config_arguments",
+            "return": "periphery.empty_object",
             "description": "Set configs of protocol",
-            "entryPoint": 1269140617,
-            "readOnly": false
+            "entry_point": 1269140617,
+            "read_only": false
         },
         "get_pair": {
-            "input": "periphery.get_pair_arguments",
-            "output": "periphery.address",
+            "argument": "periphery.get_pair_arguments",
+            "return": "periphery.address",
             "description": "get address of a pair",
-            "entryPoint": 4024190401,
-            "readOnly": true
+            "entry_point": 4024190401,
+            "read_only": true
         },
         "create_pair": {
-            "input": "periphery.create_pair_arguments",
-            "output": "periphery.empty_object",
+            "argument": "periphery.create_pair_arguments",
+            "return": "periphery.empty_object",
             "description": "Create pair if it doesn't exist",
-            "entryPoint": 678105445,
-            "readOnly": false
+            "entry_point": 678105445,
+            "read_only": false
         },
         "add_liquidity": {
-            "input": "periphery.add_liquidity_arguments",
-            "output": "periphery.add_liquidity_result",
+            "argument": "periphery.add_liquidity_arguments",
+            "return": "periphery.add_liquidity_result",
             "description": "Add liquidity to pair",
-            "entryPoint": 117856717,
-            "readOnly": false
+            "entry_point": 117856717,
+            "read_only": false
         },
         "remove_liquidity": {
-            "input": "periphery.remove_liquidity_arguments",
-            "output": "periphery.remove_liquidity_result",
+            "argument": "periphery.remove_liquidity_arguments",
+            "return": "periphery.remove_liquidity_result",
             "description": "Remove liquidity from pair",
-            "entryPoint": 650612145,
-            "readOnly": false
+            "entry_point": 650612145,
+            "read_only": false
         },
         "swap_tokens_in": {
-            "input": "periphery.swap_tokens_in_arguments",
-            "output": "periphery.empty_object",
-            "description": "Swap tokens with exact input",
-            "entryPoint": 2335548678,
-            "readOnly": false
+            "argument": "periphery.swap_tokens_in_arguments",
+            "return": "periphery.empty_object",
+            "description": "Swap tokens with exact argument",
+            "entry_point": 2335548678,
+            "read_only": false
         },
         "swap_tokens_out": {
-            "input": "periphery.swap_tokens_out_arguments",
-            "output": "periphery.empty_object",
-            "description": "Swap tokens with exact output",
-            "entryPoint": 3761082301,
-            "readOnly": false
+            "argument": "periphery.swap_tokens_out_arguments",
+            "return": "periphery.empty_object",
+            "description": "Swap tokens with exact return",
+            "entry_point": 3761082301,
+            "read_only": false
         },
         "get_quote": {
-            "input": "periphery.get_quote_arguments",
-            "output": "periphery.uint64",
+            "argument": "periphery.get_quote_arguments",
+            "return": "periphery.uint64",
             "description": "Get quote depending on reservations",
-            "entryPoint": 1066984845,
-            "readOnly": true
+            "entry_point": 1066984845,
+            "read_only": true
         },
         "get_amount_out": {
-            "input": "periphery.get_amount_out_arguments",
-            "output": "periphery.uint64",
+            "argument": "periphery.get_amount_out_arguments",
+            "return": "periphery.uint64",
             "description": "Get amounts out",
-            "entryPoint": 562360101,
-            "readOnly": true
+            "entry_point": 562360101,
+            "read_only": true
         },
         "get_amount_in": {
-            "input": "periphery.get_amount_in_arguments",
-            "output": "periphery.uint64",
+            "argument": "periphery.get_amount_in_arguments",
+            "return": "periphery.uint64",
             "description": "Get amounts in",
-            "entryPoint": 1161269195,
-            "readOnly": true
+            "entry_point": 1161269195,
+            "read_only": true
         }
     },
     "types": {

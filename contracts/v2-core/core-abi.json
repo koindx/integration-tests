@@ -1,116 +1,116 @@
 {
     "methods": {
         "name": {
-            "input": "core.name_arguments",
-            "output": "core.str",
+            "argument": "core.name_arguments",
+            "return": "core.str",
             "description": "Get name of the token",
-            "entryPoint": 2191741823,
-            "readOnly": true
+            "entry_point": 2191741823,
+            "read_only": true
         },
         "symbol": {
-            "input": "core.symbol_arguments",
-            "output": "core.str",
+            "argument": "core.symbol_arguments",
+            "return": "core.str",
             "description": "Get the symbol of the token",
-            "entryPoint": 3077209249,
-            "readOnly": true
+            "entry_point": 3077209249,
+            "read_only": true
         },
         "decimals": {
-            "input": "core.decimals_arguments",
-            "output": "core.uint32",
+            "argument": "core.decimals_arguments",
+            "return": "core.uint32",
             "description": "Get the decimals of the token",
-            "entryPoint": 4001430831,
-            "readOnly": true
+            "entry_point": 4001430831,
+            "read_only": true
         },
         "get_info": {
-            "input": "core.get_info_arguments",
-            "output": "core.info",
+            "argument": "core.get_info_arguments",
+            "return": "core.info",
             "description": "Get name, symbol and decimals",
-            "entryPoint": 3179243600,
-            "readOnly": true
+            "entry_point": 3179243600,
+            "read_only": true
         },
         "total_supply": {
-            "input": "core.total_supply_arguments",
-            "output": "core.uint64",
+            "argument": "core.total_supply_arguments",
+            "return": "core.uint64",
             "description": "Get total supply",
-            "entryPoint": 2967091508,
-            "readOnly": true
+            "entry_point": 2967091508,
+            "read_only": true
         },
         "balance_of": {
-            "input": "core.balance_of_arguments",
-            "output": "core.uint64",
+            "argument": "core.balance_of_arguments",
+            "return": "core.uint64",
             "description": "Get balance of an account 7",
-            "entryPoint": 1550980247,
-            "readOnly": true
+            "entry_point": 1550980247,
+            "read_only": true
         },
         "allowance": {
-            "input": "core.allowance_arguments",
-            "output": "core.uint64",
+            "argument": "core.allowance_arguments",
+            "return": "core.uint64",
             "description": "Get balance of an account2",
-            "entryPoint": 854630305,
-            "readOnly": true
+            "entry_point": 854630305,
+            "read_only": true
         },
         "transfer": {
-            "input": "core.transfer_arguments",
-            "output": "core.empty_object",
+            "argument": "core.transfer_arguments",
+            "return": "core.empty_object",
             "description": "Get balance of an account 6",
-            "entryPoint": 670398154,
-            "readOnly": false
+            "entry_point": 670398154,
+            "read_only": false
         },
         "approve": {
-            "input": "core.approve_arguments",
-            "output": "core.empty_object",
+            "argument": "core.approve_arguments",
+            "return": "core.empty_object",
             "description": "Get balance of an account 3",
-            "entryPoint": 1960973952,
-            "readOnly": false
+            "entry_point": 1960973952,
+            "read_only": false
         },
         "get_reserves": {
-            "input": "core.get_reserves_arguments",
-            "output": "core.get_reserves_result",
+            "argument": "core.get_reserves_arguments",
+            "return": "core.get_reserves_result",
             "description": "initializing core contract",
-            "entryPoint": 1829526207,
-            "readOnly": true
+            "entry_point": 1829526207,
+            "read_only": true
         },
         "initialize": {
-            "input": "core.initialize_arguments",
-            "output": "core.empty_object",
+            "argument": "core.initialize_arguments",
+            "return": "core.empty_object",
             "description": "initializing core contract",
-            "entryPoint": 1192148610,
-            "readOnly": false
+            "entry_point": 1192148610,
+            "read_only": false
         },
         "mint": {
-            "input": "core.mint_arguments",
-            "output": "core.uint64",
+            "argument": "core.mint_arguments",
+            "return": "core.uint64",
             "description": "mint core contract",
-            "entryPoint": 3698268091,
-            "readOnly": false
+            "entry_point": 3698268091,
+            "read_only": false
         },
         "burn": {
-            "input": "core.burn_arguments",
-            "output": "core.burn_result",
+            "argument": "core.burn_arguments",
+            "return": "core.burn_result",
             "description": "mint core contract",
-            "entryPoint": 2241834181,
-            "readOnly": false
+            "entry_point": 2241834181,
+            "read_only": false
         },
         "swap": {
-            "input": "core.swap_arguments",
-            "output": "core.empty_object",
+            "argument": "core.swap_arguments",
+            "return": "core.empty_object",
             "description": "swap core contract",
-            "entryPoint": 3662136052,
-            "readOnly": false
+            "entry_point": 3662136052,
+            "read_only": false
         },
         "skim": {
-            "input": "core.skim_arguments",
-            "output": "core.empty_object",
+            "argument": "core.skim_arguments",
+            "return": "core.empty_object",
             "description": "swap core contract",
-            "entryPoint": 1989814226,
-            "readOnly": false
+            "entry_point": 1989814226,
+            "read_only": false
         },
         "sync": {
-            "input": "core.sync_arguments",
-            "output": "core.empty_object",
+            "argument": "core.sync_arguments",
+            "return": "core.empty_object",
             "description": "swap core contract",
-            "entryPoint": 1976000254,
-            "readOnly": false
+            "entry_point": 1976000254,
+            "read_only": false
         }
     },
     "types": {
