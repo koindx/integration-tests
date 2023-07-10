@@ -164,16 +164,112 @@ describe('test the main methods', () => {
     );
 
     // mint liquidity to users
-    await dummyTKNA.mint(acc1Wif.address, "10000000000000000");
-    await dummyTKNA.mint(acc2Wif.address, "10000000000000000");
-    await dummyTKNB.mint(acc1Wif.address, "10000000000000000");
-    await dummyTKNB.mint(acc2Wif.address, "10000000000000000");
+    let mintTKN
+    mintTKN = await dummyTKNA.mint(acc1Wif.address, "100000000000000");
+    await mintTKN.transaction?.wait();
+    mintTKN = await dummyTKNB.mint(acc1Wif.address, "100000000000000");
+    await mintTKN.transaction?.wait();
+    mintTKN = await dummyTKNA.mint(acc2Wif.address, "100000000000000");
+    await mintTKN.transaction?.wait();
+    mintTKN = await dummyTKNB.mint(acc2Wif.address, "100000000000000");
+    await mintTKN.transaction?.wait();
   });
 
   it('mint liquidity', async () => {
+
+    // Minimum liquidity error
+    try {
+      await PeripheryContract.functions.add_liquidity({
+        tokenA: dummyTKNA.address(),
+        tokenB: dummyTKNB.address(),
+        amountADesired: "2500",
+        amountBDesired: "1000",
+        amountAMin: "2499",
+        amountBMin: "999"
+      }, {
+        payer: acc1Wif.address,
+        beforeSend: async (tx) => {
+          await acc1Wif.signer.signTransaction(tx);
+        }
+      })
+    } catch (err) {
+      expect(err.message).toEqual('{"error":"could not subtract 10000 from 1581","code":1,"logs":["transaction reverted: could not subtract 10000 from 1581"]}')
+    }
+
+    // add liquidity user number 1
+    let res = await PeripheryContract.functions.add_liquidity({
+      tokenA: dummyTKNA.address(),
+      tokenB: dummyTKNB.address(),
+      amountADesired: "2500000000",
+      amountBDesired: "1000000000",
+      amountAMin: "2499000000",
+      amountBMin: "999000000"
+    }, {
+      payer: acc1Wif.address,
+      beforeSend: async (tx) => { await acc1Wif.signer.signTransaction(tx) }
+    })
+    await res.transaction?.wait();
+    res = await CoreContract.functions.get_reserves({});
+    expect(res?.result?.kLast).toEqual("2500000000000000000");
+    expect(res?.result?.reserveA).toEqual("2500000000");
+    expect(res?.result?.reserveB).toEqual("1000000000");
+    res = await CoreContract.functions.total_supply({});
+    expect(res?.result?.value).toEqual("1581138830");
+    res = await CoreContract.functions.balance_of({ owner: acc1Wif.address });
+    expect(res?.result?.value).toEqual("1581128830");
+
+    // The token calculation is wrong
+    try {
+      await PeripheryContract.functions.add_liquidity({
+        tokenA: dummyTKNB.address(),
+        tokenB: dummyTKNA.address(),
+        amountADesired: "25000000",
+        amountBDesired: "10000000",
+        amountAMin: "24990000",
+        amountBMin: "9990000"
+      }, {
+        payer: acc2Wif.address,
+        beforeSend: async (tx) => { await acc2Wif.signer.signTransaction(tx) }
+      })
+    } catch (err) {
+      expect(err.message).toEqual('{"error":"KOINDX: INSUFFICIENT_A_AMOUNT","code":1,"logs":["transaction reverted: KOINDX: INSUFFICIENT_A_AMOUNT"]}')
+    }
+
+    // add liquidity user number 2
+    res = await PeripheryContract.functions.add_liquidity({
+      tokenA: dummyTKNA.address(),
+      tokenB: dummyTKNB.address(),
+      amountADesired: "25000000",
+      amountBDesired: "10000000",
+      amountAMin: "24990000",
+      amountBMin: "9990000"
+    }, {
+      payer: acc2Wif.address,
+      beforeSend: async (tx) => { await acc2Wif.signer.signTransaction(tx) }
+    })
+    await res.transaction?.wait();
+    res = await CoreContract.functions.get_reserves({});
+    expect(res?.result?.kLast).toEqual("2550250000000000000");
+    expect(res?.result?.reserveA).toEqual("2525000000");
+    expect(res?.result?.reserveB).toEqual("1010000000");
+    res = await CoreContract.functions.total_supply({});
+    expect(res?.result?.value).toEqual("1596950218");
+    res = await CoreContract.functions.balance_of({ owner: acc2Wif.address });
+    expect(res?.result?.value).toEqual("15811388");
   })
 
   it('burn liquidity', async () => {
+
+    let res = await CoreContract.functions.approve({
+      owner: acc1Wif.address,
+      spender: peripheryWif.address,
+      value: "96950218"
+    })
+    await res.transaction?.wait();
+    console.log(res)
+
+
+
   })
 
   it('swap tokens', async () => {
