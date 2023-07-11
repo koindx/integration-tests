@@ -20,7 +20,7 @@ if (process.env.ENV === 'LOCAL') {
 
 let localKoinos = new LocalKoinos(options)
 
-const [ genesis, koin, coreWif, peripheryWif, dummyTokenA, dummyTokenB, acc1Wif, acc2Wif ] = localKoinos.getAccounts();
+const [ genesis, koin, coreWif, peripheryWif, dummyTokenA, dummyTokenB, acc1Wif, acc2Wif, acc3Wif ] = localKoinos.getAccounts();
 
 let CoreContract: Contract;
 let PeripheryContract: Contract;
@@ -260,18 +260,78 @@ describe('test the main methods', () => {
 
   it('burn liquidity', async () => {
 
+    // approve tokens
     let res = await CoreContract.functions.approve({
       owner: acc1Wif.address,
       spender: peripheryWif.address,
       value: "96950218"
+    }, {
+      payer: acc1Wif.address,
+      beforeSend: async (tx) => { await acc1Wif.signer.signTransaction(tx) }
     })
     await res.transaction?.wait();
-    console.log(res)
 
-
-
+    // remove liquidity
+    res = await PeripheryContract.functions.remove_liquidity({
+      tokenA: dummyTKNA.address(),
+      tokenB: dummyTKNB.address(),
+      liquidity: "96950218",
+      amountAMin: "153291754",
+      amountBMin: "61316701"
+    }, {
+      payer: acc1Wif.address,
+      beforeSend: async (tx) => { await acc1Wif.signer.signTransaction(tx) }
+    })
+    await res.transaction?.wait();
+    res = await CoreContract.functions.get_reserves({});
+    expect(res?.result?.kLast).toEqual("2250000003080783554");
+    expect(res?.result?.reserveA).toEqual("2371708246");
+    expect(res?.result?.reserveB).toEqual("948683299");
+    res = await CoreContract.functions.total_supply({});
+    expect(res?.result?.value).toEqual("1500000000");
+    res = await CoreContract.functions.balance_of({ owner: acc1Wif.address });
+    expect(res?.result?.value).toEqual("1484178612");
   })
 
-  it('swap tokens', async () => {
+  it('swap tokens in', async () => {
+    // swap in
+    let balance = await dummyTKNB.balanceOf(acc3Wif.address);
+    expect(balance).toEqual("0");
+    let res = await PeripheryContract.functions.swap_tokens_in({
+      amountIn: "10000",
+      amountOutMin: "3980",
+      path: [
+        dummyTKNA.address(),
+        dummyTKNB.address()
+      ],
+      receiver: acc3Wif.address
+    }, {
+      payer: acc1Wif.address,
+      beforeSend: async (tx) => { await acc1Wif.signer.signTransaction(tx) }
+    })
+    await res.transaction?.wait();
+    balance = await dummyTKNB.balanceOf(acc3Wif.address);
+    expect(balance).toEqual("3989");
+  })
+
+  it('swap tokens out', async () => {
+    // swap out
+    let balance = await dummyTKNA.balanceOf(acc3Wif.address);
+    expect(balance).toEqual("0");
+    let res = await PeripheryContract.functions.swap_tokens_out({
+      amountOut: "3980",
+      amountInMax: "9970",
+      path: [
+        dummyTKNB.address(),
+        dummyTKNA.address()
+      ],
+      receiver: acc3Wif.address
+    }, {
+      payer: acc2Wif.address,
+      beforeSend: async (tx) => { await acc2Wif.signer.signTransaction(tx) }
+    })
+    await res.transaction?.wait();
+    balance = await dummyTKNA.balanceOf(acc3Wif.address);
+    expect(balance).toEqual("3980");
   })
 })
