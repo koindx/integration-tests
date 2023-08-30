@@ -180,6 +180,8 @@ describe('test the main methods', () => {
     // Minimum liquidity error
     try {
       await PeripheryContract.functions.add_liquidity({
+        from: acc1Wif.address,
+        receiver: acc1Wif.address,
         tokenA: dummyTKNA.address(),
         tokenB: dummyTKNB.address(),
         amountADesired: "2500",
@@ -198,6 +200,8 @@ describe('test the main methods', () => {
 
     // add liquidity user number 1
     let res = await PeripheryContract.functions.add_liquidity({
+      from: acc1Wif.address,
+      receiver: acc1Wif.address,
       tokenA: dummyTKNA.address(),
       tokenB: dummyTKNB.address(),
       amountADesired: "2500000000",
@@ -221,6 +225,8 @@ describe('test the main methods', () => {
     // The token calculation is wrong
     try {
       await PeripheryContract.functions.add_liquidity({
+        from: acc2Wif.address,
+        receiver: acc2Wif.address,
         tokenA: dummyTKNB.address(),
         tokenB: dummyTKNA.address(),
         amountADesired: "25000000",
@@ -237,6 +243,8 @@ describe('test the main methods', () => {
 
     // add liquidity user number 2
     res = await PeripheryContract.functions.add_liquidity({
+      from: acc2Wif.address,
+      receiver: acc2Wif.address,
       tokenA: dummyTKNA.address(),
       tokenB: dummyTKNB.address(),
       amountADesired: "25000000",
@@ -273,6 +281,8 @@ describe('test the main methods', () => {
 
     // remove liquidity
     res = await PeripheryContract.functions.remove_liquidity({
+      from: acc1Wif.address,
+      receiver: acc1Wif.address,
       tokenA: dummyTKNA.address(),
       tokenB: dummyTKNB.address(),
       liquidity: "96950218",
@@ -298,13 +308,14 @@ describe('test the main methods', () => {
     let balance = await dummyTKNB.balanceOf(acc3Wif.address);
     expect(balance).toEqual("0");
     let res = await PeripheryContract.functions.swap_tokens_in({
+      from: acc1Wif.address,
+      receiver: acc3Wif.address,
       amountIn: "10000",
       amountOutMin: "3980",
       path: [
         dummyTKNA.address(),
         dummyTKNB.address()
       ],
-      receiver: acc3Wif.address
     }, {
       payer: acc1Wif.address,
       beforeSend: async (tx) => { await acc1Wif.signer.signTransaction(tx) }
@@ -319,13 +330,14 @@ describe('test the main methods', () => {
     let balance = await dummyTKNA.balanceOf(acc3Wif.address);
     expect(balance).toEqual("0");
     let res = await PeripheryContract.functions.swap_tokens_out({
+      from: acc2Wif.address,
+      receiver: acc3Wif.address,
       amountOut: "3980",
       amountInMax: "9970",
       path: [
         dummyTKNB.address(),
         dummyTKNA.address()
       ],
-      receiver: acc3Wif.address
     }, {
       payer: acc2Wif.address,
       beforeSend: async (tx) => { await acc2Wif.signer.signTransaction(tx) }
