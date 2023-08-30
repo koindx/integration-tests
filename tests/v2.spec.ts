@@ -213,6 +213,21 @@ describe('test the main methods', () => {
       beforeSend: async (tx) => { await acc1Wif.signer.signTransaction(tx) }
     })
     await res.transaction?.wait();
+
+    expect(res.receipt.events.length).toEqual(6);
+    expect(res.receipt.events[0].name).toEqual("token.transfer_event");
+    expect(res.receipt.events[1].name).toEqual("token.transfer_event");
+    expect(res.receipt.events[2].name).toEqual("token.mint_event");
+    expect(res.receipt.events[3].name).toEqual("token.mint_event");
+    expect(res.receipt.events[4].name).toEqual("core.sync_event");
+    expect(res.receipt.events[5].name).toEqual("core.mint_event");
+    let eventData = await core.serializer.deserialize(res.receipt.events[4].data, 'core.sync_event');
+    expect(eventData.reserveA).toEqual("2500000000");
+    expect(eventData.reserveB).toEqual("1000000000");
+    eventData = await core.serializer.deserialize(res.receipt.events[5].data, 'core.mint_event');
+    expect(eventData.sender).toEqual(acc1Wif.address);
+    expect(eventData.amountA).toEqual("2500000000");
+    expect(eventData.amountB).toEqual("1000000000");
     res = await CoreContract.functions.get_reserves({});
     expect(res?.result?.kLast).toEqual("2500000000000000000");
     expect(res?.result?.reserveA).toEqual("2500000000");
@@ -256,6 +271,19 @@ describe('test the main methods', () => {
       beforeSend: async (tx) => { await acc2Wif.signer.signTransaction(tx) }
     })
     await res.transaction?.wait();
+    expect(res.receipt.events.length).toEqual(5);
+    expect(res.receipt.events[0].name).toEqual("token.transfer_event");
+    expect(res.receipt.events[1].name).toEqual("token.transfer_event");
+    expect(res.receipt.events[2].name).toEqual("token.mint_event");
+    expect(res.receipt.events[3].name).toEqual("core.sync_event");
+    expect(res.receipt.events[4].name).toEqual("core.mint_event");
+    eventData = await core.serializer.deserialize(res.receipt.events[3].data, 'core.sync_event');
+    expect(eventData.reserveA).toEqual("2525000000");
+    expect(eventData.reserveB).toEqual("1010000000");
+    eventData = await core.serializer.deserialize(res.receipt.events[4].data, 'core.mint_event');
+    expect(eventData.sender).toEqual(acc2Wif.address);
+    expect(eventData.amountA).toEqual("25000000");
+    expect(eventData.amountB).toEqual("10000000");
     res = await CoreContract.functions.get_reserves({});
     expect(res?.result?.kLast).toEqual("2550250000000000000");
     expect(res?.result?.reserveA).toEqual("2525000000");
@@ -293,6 +321,21 @@ describe('test the main methods', () => {
       beforeSend: async (tx) => { await acc1Wif.signer.signTransaction(tx) }
     })
     await res.transaction?.wait();
+    expect(res.receipt.events.length).toEqual(6);
+    expect(res.receipt.events[0].name).toEqual("token.transfer_event");
+    expect(res.receipt.events[1].name).toEqual("token.burn_event");
+    expect(res.receipt.events[2].name).toEqual("token.transfer_event");
+    expect(res.receipt.events[3].name).toEqual("token.transfer_event");
+    expect(res.receipt.events[4].name).toEqual("core.sync_event");
+    expect(res.receipt.events[5].name).toEqual("core.burn_event");
+    let eventData = await core.serializer.deserialize(res.receipt.events[4].data, 'core.sync_event');
+    expect(eventData.reserveA).toEqual("2371708246");
+    expect(eventData.reserveB).toEqual("948683299");
+    eventData = await core.serializer.deserialize(res.receipt.events[5].data, 'core.burn_event');
+    expect(eventData.to).toEqual(acc1Wif.address);
+    expect(eventData.sender).toEqual(PeripheryContract.getId())
+    expect(eventData.amountA).toEqual("153291754");
+    expect(eventData.amountB).toEqual("61316701");
     res = await CoreContract.functions.get_reserves({});
     expect(res?.result?.kLast).toEqual("2250000003080783554");
     expect(res?.result?.reserveA).toEqual("2371708246");
@@ -311,7 +354,7 @@ describe('test the main methods', () => {
       from: acc1Wif.address,
       receiver: acc3Wif.address,
       amountIn: "10000",
-      amountOutMin: "3980",
+      amountOutMin: "3989",
       path: [
         dummyTKNA.address(),
         dummyTKNB.address()
@@ -321,6 +364,21 @@ describe('test the main methods', () => {
       beforeSend: async (tx) => { await acc1Wif.signer.signTransaction(tx) }
     })
     await res.transaction?.wait();
+    expect(res.receipt.events.length).toEqual(4);
+    expect(res.receipt.events[0].name).toEqual("token.transfer_event");
+    expect(res.receipt.events[1].name).toEqual("token.transfer_event");
+    expect(res.receipt.events[2].name).toEqual("core.sync_event");
+    expect(res.receipt.events[3].name).toEqual("core.swap_event");
+    let eventData = await core.serializer.deserialize(res.receipt.events[2].data, 'core.sync_event');
+    expect(eventData.reserveA).toEqual("2371718246");
+    expect(eventData.reserveB).toEqual("948679310");
+    eventData = await core.serializer.deserialize(res.receipt.events[3].data, 'core.swap_event');
+    expect(eventData.to).toEqual(acc3Wif.address);
+    expect(eventData.sender).toEqual(PeripheryContract.getId())
+    expect(eventData.amountInA).toEqual("10000");
+    expect(eventData.amountInB).toEqual("0");
+    expect(eventData.amountOutA).toEqual("0");
+    expect(eventData.amountOutB).toEqual("3989");
     balance = await dummyTKNB.balanceOf(acc3Wif.address);
     expect(balance).toEqual("3989");
   })
@@ -333,7 +391,7 @@ describe('test the main methods', () => {
       from: acc2Wif.address,
       receiver: acc3Wif.address,
       amountOut: "3980",
-      amountInMax: "9970",
+      amountInMax: "1596",
       path: [
         dummyTKNB.address(),
         dummyTKNA.address()
@@ -343,6 +401,23 @@ describe('test the main methods', () => {
       beforeSend: async (tx) => { await acc2Wif.signer.signTransaction(tx) }
     })
     await res.transaction?.wait();
+    expect(res.receipt.events.length).toEqual(4);
+    expect(res.receipt.events[0].name).toEqual("token.transfer_event");
+    expect(res.receipt.events[1].name).toEqual("token.transfer_event");
+    expect(res.receipt.events[2].name).toEqual("core.sync_event");
+    expect(res.receipt.events[3].name).toEqual("core.swap_event");
+    let eventData = await core.serializer.deserialize(res.receipt.events[2].data, 'core.sync_event');
+    console.log(eventData)
+    expect(eventData.reserveA).toEqual("2371714266");
+    expect(eventData.reserveB).toEqual("948680906");
+    eventData = await core.serializer.deserialize(res.receipt.events[3].data, 'core.swap_event');
+    console.log(eventData)
+    expect(eventData.to).toEqual(acc3Wif.address);
+    expect(eventData.sender).toEqual(PeripheryContract.getId())
+    expect(eventData.amountInA).toEqual("0");
+    expect(eventData.amountInB).toEqual("1596");
+    expect(eventData.amountOutA).toEqual("3980");
+    expect(eventData.amountOutB).toEqual("0");
     balance = await dummyTKNA.balanceOf(acc3Wif.address);
     expect(balance).toEqual("3980");
   })
