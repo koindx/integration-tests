@@ -20,10 +20,12 @@ if (process.env.ENV === 'LOCAL') {
 
 let localKoinos = new LocalKoinos(options)
 
-const [ genesis, koin, coreWif, peripheryWif, dummyTokenA, dummyTokenB, acc1Wif, acc2Wif, acc3Wif ] = localKoinos.getAccounts();
+const [ genesis, koin, coreWif, peripheryWif, dummyTokenA, dummyTokenB, acc1Wif, acc2Wif, acc3Wif, coreKoinWif  ] = localKoinos.getAccounts();
 
 let CoreContract: Contract;
+let CoreKoinContract: Contract;
 let PeripheryContract: Contract;
+let koinTKN: Token;
 let dummyTKNA: Token;
 let dummyTKNB: Token;
 
@@ -37,6 +39,7 @@ beforeAll(async () => {
 
   dummyTKNA = await localKoinos.deployTokenContract(dummyTokenA.wif);
   dummyTKNB = await localKoinos.deployTokenContract(dummyTokenB.wif);
+  koinTKN = localKoinos.koin
 
   // deploy periphery
   PeripheryContract = await localKoinos.deployContract(
@@ -159,6 +162,23 @@ describe('test the main methods', () => {
         authorizesUploadContract: true,
         nextOperations: [
           (await PeripheryContract.functions.create_pair({ tokenA: dummyTokenA.address, tokenB: dummyTokenB.address }, { sendTransaction: false, onlyOperation: true })).operation
+        ]
+      }
+    );
+
+    // deploy core with name service
+    CoreKoinContract = await localKoinos.deployContract(
+      coreKoinWif.wif,
+      core.wasm,
+      // @ts-ignore abi is compatible
+      core.abi,
+      {},
+      {
+        authorizesCallContract: true,
+        authorizesTransactionApplication: true,
+        authorizesUploadContract: true,
+        nextOperations: [
+          (await PeripheryContract.functions.create_pair({ tokenA: "koin", tokenB: dummyTokenA.address }, { sendTransaction: false, onlyOperation: true })).operation
         ]
       }
     );
@@ -407,11 +427,9 @@ describe('test the main methods', () => {
     expect(res.receipt.events[2].name).toEqual("core.sync_event");
     expect(res.receipt.events[3].name).toEqual("core.swap_event");
     let eventData = await core.serializer.deserialize(res.receipt.events[2].data, 'core.sync_event');
-    console.log(eventData)
     expect(eventData.reserveA).toEqual("2371714266");
     expect(eventData.reserveB).toEqual("948680906");
     eventData = await core.serializer.deserialize(res.receipt.events[3].data, 'core.swap_event');
-    console.log(eventData)
     expect(eventData.to).toEqual(acc3Wif.address);
     expect(eventData.sender).toEqual(PeripheryContract.getId())
     expect(eventData.amountInA).toEqual("0");
@@ -420,5 +438,53 @@ describe('test the main methods', () => {
     expect(eventData.amountOutB).toEqual("0");
     balance = await dummyTKNA.balanceOf(acc3Wif.address);
     expect(balance).toEqual("3980");
+  })
+
+  it('skim method', async () => {
+    let balance = await koinTKN.balanceOf(acc3Wif.address);
+    expect(balance).toEqual("5000000000000");
+    let res = await CoreKoinContract.functions.skim({
+      to: acc3Wif.address
+    }, {
+      payer: acc3Wif.address,
+      beforeSend: async (tx) => { await acc3Wif.signer.signTransaction(tx) }
+    })
+    await res.transaction?.wait();
+    balance = await koinTKN.balanceOf(acc3Wif.address);
+    expect(balance).toEqual("10000000000000");
+  })
+
+  it('checking koin balances using nameserice', async () => {
+    let balance = await koinTKN.balanceOf(CoreKoinContract.getId());
+    expect(balance).toEqual("0");
+    balance = await dummyTKNA.balanceOf(CoreKoinContract.getId());
+    expect(balance).toEqual("0");
+    let res = await PeripheryContract.functions.add_liquidity({
+      from: acc1Wif.address,
+      receiver: acc1Wif.address,
+      tokenA: "koin",
+      tokenB: dummyTKNA.address(),
+      amountADesired: "2500000000",
+      amountBDesired: "1000000000",
+      amountAMin: "2499000000",
+      amountBMin: "999000000"
+    }, {
+      payer: acc1Wif.address,
+      beforeSend: async (tx) => { await acc1Wif.signer.signTransaction(tx) }
+    })
+    await res.transaction?.wait();
+    balance = await koinTKN.balanceOf(CoreKoinContract.getId());
+    expect(balance).toEqual("2500000000");
+    balance = await dummyTKNA.balanceOf(CoreKoinContract.getId());
+    expect(balance).toEqual("1000000000");
+  })
+
+  it('checking token of protocol method', async () => {
+    let res = await CoreKoinContract.functions.get_tokens();
+    expect(res.result.tokenA).toEqual(koinTKN.address());
+    expect(res.result.tokenB).toEqual(dummyTKNA.address());
+    res = await CoreContract.functions.get_tokens()
+    expect(res.result.tokenA).toEqual(dummyTKNA.address());
+    expect(res.result.tokenB).toEqual(dummyTKNB.address());
   })
 })
