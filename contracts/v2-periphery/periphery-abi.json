@@ -156,11 +156,11 @@
                     "pair_key": {
                         "fields": {
                             "tokenA": {
-                                "type": "bytes",
+                                "type": "string",
                                 "id": 1
                             },
                             "tokenB": {
-                                "type": "bytes",
+                                "type": "string",
                                 "id": 2
                             }
                         }
@@ -187,79 +187,75 @@
                     "get_pair_arguments": {
                         "fields": {
                             "tokenA": {
-                                "type": "bytes",
-                                "id": 1,
-                                "options": {
-                                    "(koinos.btype)": "ADDRESS"
-                                }
+                                "type": "string",
+                                "id": 1
                             },
                             "tokenB": {
-                                "type": "bytes",
-                                "id": 2,
-                                "options": {
-                                    "(koinos.btype)": "ADDRESS"
-                                }
+                                "type": "string",
+                                "id": 2
                             }
                         }
                     },
                     "create_pair_arguments": {
                         "fields": {
                             "tokenA": {
-                                "type": "bytes",
-                                "id": 1,
-                                "options": {
-                                    "(koinos.btype)": "ADDRESS"
-                                }
+                                "type": "string",
+                                "id": 1
                             },
                             "tokenB": {
-                                "type": "bytes",
-                                "id": 2,
-                                "options": {
-                                    "(koinos.btype)": "ADDRESS"
-                                }
+                                "type": "string",
+                                "id": 2
                             }
                         }
                     },
                     "add_liquidity_arguments": {
                         "fields": {
-                            "tokenA": {
+                            "from": {
                                 "type": "bytes",
                                 "id": 1,
                                 "options": {
                                     "(koinos.btype)": "ADDRESS"
                                 }
                             },
-                            "tokenB": {
+                            "receiver": {
                                 "type": "bytes",
                                 "id": 2,
                                 "options": {
                                     "(koinos.btype)": "ADDRESS"
                                 }
                             },
+                            "tokenA": {
+                                "type": "string",
+                                "id": 3
+                            },
+                            "tokenB": {
+                                "type": "string",
+                                "id": 4
+                            },
                             "amountADesired": {
-                                "type": "uint64",
-                                "id": 3,
-                                "options": {
-                                    "jstype": "JS_STRING"
-                                }
-                            },
-                            "amountBDesired": {
-                                "type": "uint64",
-                                "id": 4,
-                                "options": {
-                                    "jstype": "JS_STRING"
-                                }
-                            },
-                            "amountAMin": {
                                 "type": "uint64",
                                 "id": 5,
                                 "options": {
                                     "jstype": "JS_STRING"
                                 }
                             },
-                            "amountBMin": {
+                            "amountBDesired": {
                                 "type": "uint64",
                                 "id": 6,
+                                "options": {
+                                    "jstype": "JS_STRING"
+                                }
+                            },
+                            "amountAMin": {
+                                "type": "uint64",
+                                "id": 7,
+                                "options": {
+                                    "jstype": "JS_STRING"
+                                }
+                            },
+                            "amountBMin": {
+                                "type": "uint64",
+                                "id": 8,
                                 "options": {
                                     "jstype": "JS_STRING"
                                 }
@@ -293,37 +289,45 @@
                     },
                     "remove_liquidity_arguments": {
                         "fields": {
-                            "tokenA": {
+                            "from": {
                                 "type": "bytes",
                                 "id": 1,
                                 "options": {
                                     "(koinos.btype)": "ADDRESS"
                                 }
                             },
-                            "tokenB": {
+                            "receiver": {
                                 "type": "bytes",
                                 "id": 2,
                                 "options": {
                                     "(koinos.btype)": "ADDRESS"
                                 }
                             },
+                            "tokenA": {
+                                "type": "string",
+                                "id": 3
+                            },
+                            "tokenB": {
+                                "type": "string",
+                                "id": 4
+                            },
                             "liquidity": {
                                 "type": "uint64",
-                                "id": 3,
+                                "id": 5,
                                 "options": {
                                     "jstype": "JS_STRING"
                                 }
                             },
                             "amountAMin": {
                                 "type": "uint64",
-                                "id": 4,
+                                "id": 6,
                                 "options": {
                                     "jstype": "JS_STRING"
                                 }
                             },
                             "amountBMin": {
                                 "type": "uint64",
-                                "id": 5,
+                                "id": 7,
                                 "options": {
                                     "jstype": "JS_STRING"
                                 }
@@ -350,16 +354,30 @@
                     },
                     "swap_tokens_in_arguments": {
                         "fields": {
+                            "from": {
+                                "type": "bytes",
+                                "id": 1,
+                                "options": {
+                                    "(koinos.btype)": "ADDRESS"
+                                }
+                            },
+                            "receiver": {
+                                "type": "bytes",
+                                "id": 2,
+                                "options": {
+                                    "(koinos.btype)": "ADDRESS"
+                                }
+                            },
                             "amountIn": {
                                 "type": "uint64",
-                                "id": 1,
+                                "id": 3,
                                 "options": {
                                     "jstype": "JS_STRING"
                                 }
                             },
                             "amountOutMin": {
                                 "type": "uint64",
-                                "id": 2,
+                                "id": 4,
                                 "options": {
                                     "jstype": "JS_STRING"
                                 }
@@ -367,29 +385,36 @@
                             "path": {
                                 "rule": "repeated",
                                 "type": "string",
-                                "id": 3
-                            },
-                            "receiver": {
-                                "type": "bytes",
-                                "id": 4,
-                                "options": {
-                                    "(koinos.btype)": "ADDRESS"
-                                }
+                                "id": 5
                             }
                         }
                     },
                     "swap_tokens_out_arguments": {
                         "fields": {
+                            "from": {
+                                "type": "bytes",
+                                "id": 1,
+                                "options": {
+                                    "(koinos.btype)": "ADDRESS"
+                                }
+                            },
+                            "receiver": {
+                                "type": "bytes",
+                                "id": 2,
+                                "options": {
+                                    "(koinos.btype)": "ADDRESS"
+                                }
+                            },
                             "amountOut": {
                                 "type": "uint64",
-                                "id": 1,
+                                "id": 3,
                                 "options": {
                                     "jstype": "JS_STRING"
                                 }
                             },
                             "amountInMax": {
                                 "type": "uint64",
-                                "id": 2,
+                                "id": 4,
                                 "options": {
                                     "jstype": "JS_STRING"
                                 }
@@ -397,14 +422,7 @@
                             "path": {
                                 "rule": "repeated",
                                 "type": "string",
-                                "id": 3
-                            },
-                            "receiver": {
-                                "type": "bytes",
-                                "id": 4,
-                                "options": {
-                                    "(koinos.btype)": "ADDRESS"
-                                }
+                                "id": 5
                             }
                         }
                     },
@@ -480,6 +498,25 @@
                                 "options": {
                                     "jstype": "JS_STRING"
                                 }
+                            }
+                        }
+                    },
+                    "register_event": {
+                        "fields": {
+                            "pair": {
+                                "type": "bytes",
+                                "id": 1,
+                                "options": {
+                                    "(koinos.btype)": "ADDRESS"
+                                }
+                            },
+                            "tokenA": {
+                                "type": "string",
+                                "id": 2
+                            },
+                            "tokenB": {
+                                "type": "string",
+                                "id": 3
                             }
                         }
                     }
